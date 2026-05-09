@@ -1,18 +1,6 @@
-import { WebSocketServer, WebSocket } from "ws";
+import { WebSocketServer } from "ws";
+import { setupWebSocketServer } from "./src/websocket/ws.setup";
 
-const wss = new WebSocketServer({ port: 3500 });
+const wss = new WebSocketServer({ port: 8080 });
 
-wss.on("connection", (ws: WebSocket) => {
-  console.log("New user");
-  ws.on("message", (data: Buffer) => {
-    console.log("New message");
-    ws.send(data.toString());
-  });
-  ws.on("close", () => {
-    console.log("User disconnected");
-  });
-
-  ws.on("error", (err) => {
-    console.error("Socket error:", err);
-  });
-});
+setupWebSocketServer(wss);
