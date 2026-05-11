@@ -1,1 +1,10 @@
-export const App = () => <h1>Setup project</h1>;
+import { AnonSectionFilter } from "./components/AnonFilter";
+import "./style/main.css";
+
+export const App = () => {
+  return (
+    <main>
+      <AnonSectionFilter />
+    </main>
+  );
+};
