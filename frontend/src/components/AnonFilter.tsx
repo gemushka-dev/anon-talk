@@ -3,9 +3,9 @@ import { useRef, useState } from "react";
 import { filterData, genderFilterData } from "../data/filterData";
 
 import "../style/lobby.css";
-import type { GenderType, AgeType } from "../types/FiltersType";
+import type { GenderType, AgeType, FilterData } from "../types/FiltersType";
 
-export const AnonSectionFilter = () => {
+export const AnonSectionFilter = ({ connectWebSocket }) => {
   const meRef = useRef<AgeType>("below 17");
   const meRefGender = useRef<GenderType>("m");
   const searchRef = useRef<AgeType>("below 17");
@@ -14,6 +14,20 @@ export const AnonSectionFilter = () => {
   const [genderMe, setGenderMe] = useState("m");
   const [selectedSeacrh, setSelectedSearch] = useState("below 17");
   const [genderSearch, setGenderSearch] = useState("m");
+
+  function handleStartClick() {
+    const filter: FilterData = {
+      my: {
+        sex: meRefGender.current,
+        age: meRef.current,
+      },
+      search: {
+        sex: searchRefGender.current,
+        age: searchRef.current,
+      },
+    };
+    connectWebSocket(filter);
+  }
 
   function clickHandler(data: AgeType) {
     meRef.current = data;
@@ -85,7 +99,7 @@ export const AnonSectionFilter = () => {
             ))}
           </div>
         </div>
-        <button className="search__btn" onClick={() => console.log("Connect")}>
+        <button className="search__btn" onClick={handleStartClick}>
           Start
         </button>
       </div>
