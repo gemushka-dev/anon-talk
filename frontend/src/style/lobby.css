@@ -1,0 +1,87 @@
+.filter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #202020;
+  color: white;
+  font-family: "Inter", sans-serif;
+}
+
+.filter__title {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  color: white;
+  font-weight: 900;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4rem;
+  background: #1a1d21;
+  padding: 3rem;
+  border-radius: 2rem;
+  border: 1px solid #2d3238;
+}
+
+.me,
+.search {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+span {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.gender {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.gender .filter__btn {
+  flex: 1;
+  min-width: 5rem;
+}
+
+.age {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1.5rem;
+    border: none;
+    width: 100%;
+    background-color: #202020;
+  }
+  .age {
+    flex-direction: column;
+  }
+  .filter__btn {
+    padding: 1.2rem;
+    font-size: 1rem;
+  }
+}
+
+.search__btn {
+  width: 100%;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  border: none;
+  background: white;
+  color: black;
+  font-weight: 900;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
