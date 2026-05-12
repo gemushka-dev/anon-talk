@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { AnonSectionFilter } from "./components/AnonFilter";
 import "./style/main.css";
 import type { FilterData } from "./types/FiltersType";
+import { AnonChat } from "./components/AnonChat";
 
 export const App = () => {
   const [screen, setScreen] = useState("filter");
@@ -27,7 +28,12 @@ export const App = () => {
         {screen === "filter" && (
           <AnonSectionFilter connectWebSocket={connectWebSocket} />
         )}
-        {screen === "chat" && <h1>Connected</h1>}
+        {screen === "chat" && (
+          <AnonChat
+            socket={socketRef.current}
+            filter={() => setScreen("filter")}
+          />
+        )}
       </main>
     </>
   );
