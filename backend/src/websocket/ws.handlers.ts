@@ -16,6 +16,16 @@ export const connectWebSocket = (ws: WebSocket) => {
       matchWebSocket(data, ws);
     }
   });
+  ws.on("close", () => {
+    const partner = activeWs.get(ws);
+    if (partner) {
+      if (partner.readyState === WebSocket.OPEN) {
+        partner.send(JSON.stringify({ type: "LEAVE" }));
+        activeWs.delete(ws);
+        activeWs.delete(partner);
+      }
+    }
+  });
 };
 
 function matchWebSocket(data: any, ws: WebSocket) {
