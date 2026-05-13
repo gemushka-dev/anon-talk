@@ -15,24 +15,53 @@ export const AnonChat = ({
 
   useEffect(() => {
     function handleMessage(e: MessageEvent) {
-      const data = JSON.parse(e.data);
-      if (data.type === "LEAVE") {
-        setEnd(true);
+      const data: Message = JSON.parse(e.data);
+      switch (data.type) {
+        case "LEAVE":
+          setEnd(true);
+          break;
+        case "MESSAGE":
+          setMessages((prev) => [...prev, { ...data }]);
+          break;
+        default:
+          setMessages([]);
+          setEnd(false);
+          break;
       }
-      setMessages((prev) => [...prev, { text: data.text, isMe: false }]);
     }
     if (socket != null) socket.onmessage = handleMessage;
   }, [messages, socket]);
 
   function sendMessage() {
     if (!inputValue.trim() || !socket) return;
+    const mes: Message = {
+      type: "MESSAGE",
+      text: inputValue,
+      isMe: false,
+    };
 
-    socket.send(JSON.stringify({ text: inputValue }));
-    setMessages((prev) => [...prev, { text: inputValue, isMe: true }]);
+    socket.send(JSON.stringify(mes));
+    setMessages((prev) => [...prev, { ...mes, isMe: true }]);
     setInputValue("");
   }
+
+  function nextAnon() {
+    if (!socket) return console.log("problem with connection");
+    const filter = localStorage.getItem("searchFilter");
+    if (!filter) return console.log("Problem with filters");
+    socket.send(filter);
+  }
+  function leaveRoom() {
+    if (!socket) return;
+    socket.send(JSON.stringify({ type: "LEAVE__ROOM" }));
+    filter();
+  }
+
   return (
     <section className="chat">
+      <button onClick={leaveRoom} className="home__btn">
+        Leave
+      </button>
       <div className="chat__window">
         {messages &&
           messages.map((msg) => (
@@ -46,6 +75,9 @@ export const AnonChat = ({
           Anon left the chat{" "}
           <button className="home__btn" onClick={filter}>
             Home
+          </button>
+          <button className="home__btn" onClick={nextAnon}>
+            Next
           </button>
         </div>
       ) : null}

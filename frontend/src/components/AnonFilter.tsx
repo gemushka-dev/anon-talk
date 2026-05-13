@@ -26,6 +26,7 @@ export const AnonSectionFilter = ({ connectWebSocket }) => {
         age: searchRef.current,
       },
     };
+    localStorage.setItem("searchFilter", JSON.stringify(filter));
     connectWebSocket(filter);
   }
 
