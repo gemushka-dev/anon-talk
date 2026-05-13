@@ -8,9 +8,20 @@ const activeWs = new Map<WebSocket, WebSocket>();
 export const connectWebSocket = (ws: WebSocket) => {
   ws.on("message", (data: Buffer) => {
     const partner = activeWs.get(ws);
+
+    const dataToSend = JSON.parse(data.toString());
     if (partner) {
-      if (partner.readyState === WebSocket.OPEN) {
-        partner.send(data.toString());
+      switch (dataToSend.type) {
+        case "MESSAGE":
+          if (partner.readyState === WebSocket.OPEN) {
+            partner.send(JSON.stringify(dataToSend));
+          }
+          break;
+        case "LEAVE__ROOM":
+          partner.send(JSON.stringify({ type: "LEAVE" }));
+          activeWs.delete(partner);
+          activeWs.delete(ws);
+          break;
       }
     } else {
       matchWebSocket(data, ws);
