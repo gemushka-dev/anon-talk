@@ -19,6 +19,8 @@ export const App = () => {
       const data = JSON.parse(event.data);
       if (data.message === "Found!") {
         setScreen("chat");
+      } else if (data.message === "Invalid JSON") {
+        alert("Error with filters");
       }
     };
   }
