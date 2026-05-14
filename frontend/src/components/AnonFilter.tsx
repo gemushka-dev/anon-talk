@@ -1,51 +1,33 @@
 import { Button } from "./Button";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { filterData, genderFilterData } from "../data/filterData";
 
 import "../style/lobby.css";
 import type { GenderType, AgeType, FilterData } from "../types/FiltersType";
 
-export const AnonSectionFilter = ({ connectWebSocket }) => {
-  const meRef = useRef<AgeType>("below 17");
-  const meRefGender = useRef<GenderType>("m");
-  const searchRef = useRef<AgeType>("below 17");
-  const searchRefGender = useRef<GenderType>("m");
-  const [selectedMe, setSelectedMe] = useState("below 17");
-  const [genderMe, setGenderMe] = useState("m");
-  const [selectedSeacrh, setSelectedSearch] = useState("below 17");
-  const [genderSearch, setGenderSearch] = useState("m");
+export const AnonSectionFilter = ({
+  connectWebSocket,
+}: {
+  connectWebSocket: (filter: FilterData) => void;
+}) => {
+  const [myAge, setMyAge] = useState<AgeType>("below 17");
+  const [myGender, setMyGender] = useState<GenderType>("m");
+  const [searchAge, setSearchAge] = useState<AgeType>("below 17");
+  const [searchGender, setSearchGender] = useState<GenderType>("m");
 
   function handleStartClick() {
     const filter: FilterData = {
-      my: {
-        sex: meRefGender.current,
-        age: meRef.current,
-      },
-      search: {
-        sex: searchRefGender.current,
-        age: searchRef.current,
-      },
+      my: { sex: myGender, age: myAge },
+      search: { sex: searchGender, age: searchAge },
     };
     localStorage.setItem("searchFilter", JSON.stringify(filter));
     connectWebSocket(filter);
   }
 
-  function clickHandler(data: AgeType) {
-    meRef.current = data;
-    setSelectedMe(data);
-  }
-  function clickHandlerGender(data: GenderType) {
-    meRefGender.current = data;
-    setGenderMe(data);
-  }
-  function clickSearchHandler(data: AgeType) {
-    searchRef.current = data;
-    setSelectedSearch(data);
-  }
-  function clickSearchGender(data: GenderType) {
-    searchRefGender.current = data;
-    setGenderSearch(data);
-  }
+  const clickMyAge = (val: AgeType) => setMyAge(val);
+  const clickMyGender = (val: GenderType) => setMyGender(val);
+  const clickSearchAge = (val: AgeType) => setSearchAge(val);
+  const clickSearchGender = (val: GenderType) => setSearchGender(val);
 
   return (
     <section className="filter">
@@ -58,8 +40,8 @@ export const AnonSectionFilter = ({ connectWebSocket }) => {
               <Button
                 text={el}
                 key={el + "me_gender"}
-                onClick={() => clickHandlerGender(el as GenderType)}
-                isActive={genderMe === el}
+                onClick={() => clickMyGender(el as GenderType)}
+                isActive={myGender === el}
               />
             ))}
           </div>
@@ -69,8 +51,8 @@ export const AnonSectionFilter = ({ connectWebSocket }) => {
               <Button
                 text={el}
                 key={el + "me_age"}
-                onClick={() => clickHandler(el as AgeType)}
-                isActive={selectedMe === el}
+                onClick={() => clickMyAge(el as AgeType)}
+                isActive={myAge === el}
               />
             ))}
           </div>
@@ -83,7 +65,7 @@ export const AnonSectionFilter = ({ connectWebSocket }) => {
                 text={el}
                 key={el + "search_gender"}
                 onClick={() => clickSearchGender(el as GenderType)}
-                isActive={genderSearch === el}
+                isActive={searchGender === el}
               />
             ))}
           </div>
@@ -94,8 +76,8 @@ export const AnonSectionFilter = ({ connectWebSocket }) => {
               <Button
                 text={el}
                 key={el + "search_age"}
-                onClick={() => clickSearchHandler(el as AgeType)}
-                isActive={selectedSeacrh === el}
+                onClick={() => clickSearchAge(el as AgeType)}
+                isActive={searchAge === el}
               />
             ))}
           </div>
