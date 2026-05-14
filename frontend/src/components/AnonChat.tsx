@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import type { Message } from "../types/MessageType";
 import "../style/chat.css";
+import {
+  createMessageHandler,
+  createSendMessage,
+  createNextSearch,
+  createLeave,
+} from "../handlers/chatHandlers";
 
 export const AnonChat = ({
   socket,
@@ -13,53 +19,23 @@ export const AnonChat = ({
   const [inputValue, setInputValue] = useState("");
   const [end, setEnd] = useState(false);
 
+  const handleMessage = createMessageHandler({ setEnd, setMessages });
+  const sendMessage = createSendMessage({
+    inputValue,
+    socket,
+    setMessages,
+    setInputValue,
+  });
+  const nextSearch = createNextSearch(socket);
+  const leave = createLeave(socket, filter);
+
   useEffect(() => {
-    function handleMessage(e: MessageEvent) {
-      const data: Message = JSON.parse(e.data);
-      switch (data.type) {
-        case "LEAVE":
-          setEnd(true);
-          break;
-        case "MESSAGE":
-          setMessages((prev) => [...prev, { ...data }]);
-          break;
-        default:
-          setMessages([]);
-          setEnd(false);
-          break;
-      }
-    }
     if (socket != null) socket.onmessage = handleMessage;
   }, [messages, socket]);
 
-  function sendMessage() {
-    if (!inputValue.trim() || !socket) return;
-    const mes: Message = {
-      type: "MESSAGE",
-      text: inputValue,
-      isMe: false,
-    };
-
-    socket.send(JSON.stringify(mes));
-    setMessages((prev) => [...prev, { ...mes, isMe: true }]);
-    setInputValue("");
-  }
-
-  function nextAnon() {
-    if (!socket) return console.log("problem with connection");
-    const filter = localStorage.getItem("searchFilter");
-    if (!filter) return console.log("Problem with filters");
-    socket.send(filter);
-  }
-  function leaveRoom() {
-    if (!socket) return;
-    socket.send(JSON.stringify({ type: "LEAVE__ROOM" }));
-    filter();
-  }
-
   return (
     <section className="chat">
-      <button onClick={leaveRoom} className="home__btn">
+      <button onClick={leave} className="home__btn">
         Leave
       </button>
       <div className="chat__window">
@@ -76,7 +52,7 @@ export const AnonChat = ({
           <button className="home__btn" onClick={filter}>
             Home
           </button>
-          <button className="home__btn" onClick={nextAnon}>
+          <button className="home__btn" onClick={nextSearch}>
             Next
           </button>
         </div>
