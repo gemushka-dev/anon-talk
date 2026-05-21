@@ -1,5 +1,5 @@
 import { WebSocketServer } from "ws";
-import { setupWebSocketServer } from "./src/websocket/ws.setup";
+import { setupWebSocketServer } from "./src/ws/ws.setup";
 
 const wss = new WebSocketServer({ port: 8080 });
 
