@@ -5,10 +5,10 @@ import type {
   ClientPersonalData,
 } from "../../types/client";
 
-export class ChatService {
+class ChatService {
   handleMessage(ws: WebSocket, data: ClientFrontendData) {
     switch (data.type) {
-      case "SEND": {
+      case "MESSAGE": {
         const partner = chatStore.getPartner(ws);
         if (!partner) return;
         partner.send(JSON.stringify(data));
@@ -21,7 +21,7 @@ export class ChatService {
       }
 
       case "MATCH": {
-        this.matchPartner(ws, data.data);
+        this.matchPartner(ws, data.data.search);
         break;
       }
 
@@ -49,3 +49,5 @@ export class ChatService {
     chatStore.clear(ws);
   }
 }
+
+export const chatService = new ChatService();

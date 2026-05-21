@@ -1,7 +1,7 @@
-// export type ClientFrontendData = {
-//   my: ClientPersonalData;
-//   search: ClientPersonalData;
-// };
+export type ClientFilterType = {
+  my: ClientPersonalData;
+  search: ClientPersonalData;
+};
 
 export type ClientPersonalData = {
   sex: "m" | "w";
@@ -10,12 +10,12 @@ export type ClientPersonalData = {
 
 export type ClientFrontendData =
   | {
-      type: "SEND";
+      type: "MESSAGE";
       data: { message: string };
     }
   | {
       type: "MATCH";
-      data: ClientPersonalData;
+      data: ClientFilterType;
     }
   | {
       type: "LEAVE";
