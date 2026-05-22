@@ -48,6 +48,8 @@ export const AnonSectionFilter = ({
             className="age"
             valueCheck={myAge}
           />
+        </div>
+        <div className="search">
           <FilterSection
             text="Gender:"
             array={genderFilterData as GenderType[]}
