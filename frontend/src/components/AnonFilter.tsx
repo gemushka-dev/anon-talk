@@ -1,9 +1,10 @@
-import { Button } from "./Button";
 import { useState } from "react";
 import { filterData, genderFilterData } from "../data/filterData";
 
 import "../style/lobby.css";
 import type { GenderType, AgeType, FilterData } from "../types/FiltersType";
+import { createStartHandler } from "../handlers/filterHandlers";
+import { FilterSection } from "./FilterSection";
 
 export const AnonSectionFilter = ({
   connectWebSocket,
@@ -15,14 +16,11 @@ export const AnonSectionFilter = ({
   const [searchAge, setSearchAge] = useState<AgeType>("below 17");
   const [searchGender, setSearchGender] = useState<GenderType>("m");
 
-  function handleStartClick() {
-    const filter: FilterData = {
-      my: { sex: myGender, age: myAge },
-      search: { sex: searchGender, age: searchAge },
-    };
-    localStorage.setItem("searchFilter", JSON.stringify(filter));
-    connectWebSocket(filter);
-  }
+  const handleStartClick = createStartHandler(
+    { age: myAge, sex: myGender },
+    { age: searchAge, sex: searchGender },
+    connectWebSocket,
+  );
 
   const clickMyAge = (val: AgeType) => setMyAge(val);
   const clickMyGender = (val: GenderType) => setMyGender(val);
@@ -34,53 +32,38 @@ export const AnonSectionFilter = ({
       <h1 className="filter__title">AnonTalk</h1>
       <div className="container">
         <div className="me">
-          <span>Gender:</span>
-          <div className="gender">
-            {genderFilterData.map((el) => (
-              <Button
-                text={el}
-                key={el + "me_gender"}
-                onClick={() => clickMyGender(el as GenderType)}
-                isActive={myGender === el}
-              />
-            ))}
-          </div>
-          <span>Age:</span>
-          <div className="age">
-            {filterData.map((el) => (
-              <Button
-                text={el}
-                key={el + "me_age"}
-                onClick={() => clickMyAge(el as AgeType)}
-                isActive={myAge === el}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="search">
-          <span>Gender:</span>
-          <div className="gender">
-            {genderFilterData.map((el) => (
-              <Button
-                text={el}
-                key={el + "search_gender"}
-                onClick={() => clickSearchGender(el as GenderType)}
-                isActive={searchGender === el}
-              />
-            ))}
-          </div>
-
-          <span>Age:</span>
-          <div className="age">
-            {filterData.map((el) => (
-              <Button
-                text={el}
-                key={el + "search_age"}
-                onClick={() => clickSearchAge(el as AgeType)}
-                isActive={searchAge === el}
-              />
-            ))}
-          </div>
+          <FilterSection
+            text="Gender:"
+            array={genderFilterData as GenderType[]}
+            uniqKey="me_gender"
+            onClick={clickMyGender}
+            className="gender"
+            valueCheck={myGender}
+          />
+          <FilterSection
+            text="Age:"
+            array={filterData as AgeType[]}
+            uniqKey="me_age"
+            onClick={clickMyAge}
+            className="age"
+            valueCheck={myAge}
+          />
+          <FilterSection
+            text="Gender:"
+            array={genderFilterData as GenderType[]}
+            uniqKey="search_gender"
+            onClick={clickSearchGender}
+            className="gender"
+            valueCheck={searchGender}
+          />
+          <FilterSection
+            text="Age:"
+            array={filterData as AgeType[]}
+            uniqKey="search_age"
+            onClick={clickSearchAge}
+            className="age"
+            valueCheck={searchAge}
+          />
         </div>
         <button className="search__btn" onClick={handleStartClick}>
           Start
