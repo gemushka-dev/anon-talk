@@ -1,7 +1,18 @@
-export type FilterData = {
-  my: ClientPersonalData;
-  search: ClientPersonalData;
-};
+export type FilterData =
+  | {
+      type: "MESSAGE";
+      data: { message: string };
+    }
+  | {
+      type: "MATCH";
+      data: {
+        my: ClientPersonalData;
+        search: ClientPersonalData;
+      };
+    }
+  | {
+      type: "LEAVE";
+    };
 
 export type ClientPersonalData = {
   sex: "m" | "w";
