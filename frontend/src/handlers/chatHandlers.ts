@@ -32,12 +32,17 @@ export const createSendMessage = ({
     if (!inputValue.trim() || !socket) return;
     const mes: Message = {
       type: "MESSAGE",
-      text: inputValue,
-      isMe: false,
+      data: {
+        text: inputValue,
+        isMe: false,
+      },
     };
 
     socket.send(JSON.stringify(mes));
-    setMessages((prev) => [...prev, { ...mes, isMe: true }]);
+    if (mes.data) {
+      mes.data.isMe = true;
+    }
+    setMessages((prev) => [...prev, { ...mes }]);
     setInputValue("");
   };
 };
@@ -54,7 +59,7 @@ export const createNextSearch = (socket: WebSocket | null) => {
 export const createLeave = (socket: WebSocket | null, filter: () => void) => {
   return () => {
     if (!socket) return;
-    socket.send(JSON.stringify({ type: "LEAVE__ROOM" }));
+    socket.send(JSON.stringify({ type: "LEAVE" }));
     filter();
   };
 };
