@@ -31,7 +31,7 @@ export const AnonChat = ({
 
   useEffect(() => {
     if (socket != null) socket.onmessage = handleMessage;
-  }, [messages, socket]);
+  }, [socket]);
 
   return (
     <section className="chat">
