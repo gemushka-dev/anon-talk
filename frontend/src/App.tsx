@@ -17,7 +17,7 @@ export const App = () => {
     };
     ws.onmessage = (event: any) => {
       const data = JSON.parse(event.data);
-      if (data.message === "Found!") {
+      if (data.message === "FOUND") {
         setScreen("chat");
       } else if (data.message === "Invalid JSON") {
         alert("Error with filters");

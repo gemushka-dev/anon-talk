@@ -41,8 +41,10 @@ export const AnonChat = ({
       <div className="chat__window">
         {messages &&
           messages.map((msg) => (
-            <div className={msg.isMe ? "chat__msg mine" : "chat__msg anon"}>
-              {msg.text}
+            <div
+              className={msg.data?.isMe ? "chat__msg mine" : "chat__msg anon"}
+            >
+              {msg.data?.text}
             </div>
           ))}
       </div>
